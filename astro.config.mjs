@@ -1,11 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// Served at https://pilumrts.github.io/web/ until pilumrts.com is switched over.
-// When the custom domain goes live: site 'https://pilumrts.com', base '/'.
+// Served at https://pilumrts.com (GitHub Pages custom domain, public/CNAME).
 export default defineConfig({
-  site: 'https://pilumrts.github.io',
-  base: '/web',
+  site: 'https://pilumrts.com',
+  base: '/',
   output: 'static',
   trailingSlash: 'always',
 });
