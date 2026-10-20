@@ -1,0 +1,134 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const releases = "https://github.com/PilumRTS/pilum-releases/releases/latest";
+const youtube = "https://www.youtube.com/@PilumRTS";
+const email = "info@pilumrts.com";
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<Layout
+  title="Pilum: a tactical RTS of frontier colonies and war"
+  description="The known worlds end where your outpost stands. Pilum is a tactical RTS of frontier colonies and war, in early alpha for Mac and Windows."
+>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Pilum, back to top">
+      <span class="brand-mark" style={`--mask: url(${base}helmet-mask.png)`} aria-hidden="true"></span>
+      <span class="brand-name">PILUM</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#download">Download</a>
+      <a href="#follow">Follow</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="helmet" style={`--mask: url(${base}helmet-mask.png)`} aria-hidden="true"></div>
+        <p class="kicker"><span class="tag">Early alpha</span> Build by day. Fight by night.</p>
+        <h1 class="logo">PILUM</h1>
+        <p class="headline">The known worlds end where your outpost stands.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href={releases}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
+            Download the alpha
+          </a>
+          <a class="btn btn-ghost" href={youtube}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" class="fill" /></svg>
+            Watch on YouTube
+          </a>
+        </div>
+        <p class="platforms">Mac and Windows</p>
+      </div>
+      <div class="horizon" aria-hidden="true"></div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="wrap">
+        <p class="label"><span>01</span> The frontier</p>
+        <h2>The known worlds end where your outpost stands.</h2>
+        <div class="copy">
+          <p class="lead">
+            Pilum is a tactical RTS of frontier colonies and war. You're the commander sent to the edge: a landing pad,
+            a dry plain, and the settlers brave enough to follow.
+          </p>
+          <p>
+            Build the first homes. Pump water from deep below the dust, mine for minerals, and trade with other
+            outposts for what the land won't give you. Turn newcomers into citizens, and a forward operating base into a
+            town worth calling home.
+          </p>
+          <p>Raise an army to defend it against raiders, rival outposts, and enemies from beyond the rim.</p>
+          <p>Grow from a landing pad to a spaceport city, and push the frontier further out.</p>
+          <p class="note">Early alpha: features and visuals may change.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="download" class="section download">
+      <div class="wrap">
+        <p class="label"><span>02</span> Download</p>
+        <h2>Get the alpha</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>Mac</h3>
+            <a class="btn btn-primary" href={releases}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
+              Download for Mac
+            </a>
+            <p class="small">
+              The Mac build isn't notarized yet. On first launch, open System Settings → Privacy &amp; Security and
+              click <strong>Open Anyway</strong>.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Windows</h3>
+            <a class="btn btn-primary" href={releases}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
+              Download for Windows
+            </a>
+            <p class="small">
+              SmartScreen may say “Windows protected your PC”. Click <strong>More info</strong> →
+              <strong>Run anyway</strong>.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="follow" class="section follow">
+      <div class="wrap">
+        <p class="label"><span>03</span> Follow</p>
+        <h2>Stay on the line</h2>
+        <ul class="links">
+          <li>
+            <a href={youtube}>
+              <span class="link-kind">YouTube</span>
+              <span class="link-value">@PilumRTS</span>
+            </a>
+          </li>
+          <li>
+            <a href={releases}>
+              <span class="link-kind">GitHub releases</span>
+              <span class="link-value">PilumRTS/pilum-releases</span>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${email}`}>
+              <span class="link-kind">Contact</span>
+              <span class="link-value">{email}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <span>© 2026 Pilum.</span>
+      <span>Early alpha.</span>
+    </div>
+  </footer>
+</Layout>
