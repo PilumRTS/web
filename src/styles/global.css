@@ -325,6 +325,7 @@ h2 {
 
 .about h2 {
   max-width: 18ch;
+  margin-inline: auto;
 }
 
 .copy {
