@@ -349,6 +349,64 @@ h2 {
   color: var(--muted);
 }
 
+/* Gameplay */
+.legend {
+  margin: -16px 0 36px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 20px;
+}
+
+.feature h3 {
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+
+.feature ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.feature li {
+  margin: 0 0 0.6em;
+  line-height: 1.55;
+}
+
+.feature li::marker {
+  color: var(--amber);
+}
+
+.soon {
+  display: inline-block;
+  padding: 3px 7px 2px;
+  border: 1px solid var(--amber);
+  font: 500 0.7rem/1 var(--font-head);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: 0.15em;
+  color: var(--amber-hi);
+}
+
+.feature li .soon {
+  margin-right: 6px;
+}
+
+.feature h3 .soon {
+  margin-left: 8px;
+}
+
+.gameplay .note {
+  margin: 32px 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
 /* Download cards */
 .cards {
   display: grid;
@@ -457,6 +515,9 @@ h2 {
 }
 
 @media (max-width: 520px) {
+  .brand-name {
+    display: none;
+  }
   .topbar nav a {
     font-size: 0.85rem;
     letter-spacing: 0.1em;
