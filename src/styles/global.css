@@ -350,12 +350,6 @@ h2 {
 }
 
 /* Gameplay */
-.legend {
-  margin: -16px 0 36px;
-  text-align: center;
-  color: var(--muted);
-}
-
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
@@ -381,23 +375,9 @@ h2 {
   color: var(--amber);
 }
 
-.soon {
-  display: inline-block;
-  padding: 3px 7px 2px;
-  border: 1px solid var(--amber);
-  font: 500 0.7rem/1 var(--font-head);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  vertical-align: 0.15em;
-  color: var(--amber-hi);
-}
-
-.feature li .soon {
-  margin-right: 6px;
-}
-
-.feature h3 .soon {
-  margin-left: 8px;
+.feature strong {
+  color: var(--cream);
+  font-weight: 600;
 }
 
 .gameplay .note {
