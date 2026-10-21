@@ -201,13 +201,17 @@ a:focus-visible,
 }
 
 .headline {
-  max-width: 22ch;
+  max-width: 30ch;
   margin: 22px auto 0;
   font: 700 clamp(1.7rem, 5vw, 3rem)/1.08 var(--font-head);
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--sand);
   text-wrap: balance;
+}
+
+.headline span {
+  display: block;
 }
 
 .ctas {
