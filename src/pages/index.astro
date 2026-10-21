@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const repo = "https://github.com/PilumRTS/pilum-releases";
+const repo = "https://github.com/PilumRTS/releases";
 // Direct installer URLs from the latest release's manifests; the script at the bottom refreshes them after a new release.
 async function installer(os: string) {
   const manifest = await (await fetch(`${repo}/releases/latest/download/release-manifest-${os}.json`)).json();
@@ -247,7 +247,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
   </footer>
 
   <script>
-    fetch("https://api.github.com/repos/PilumRTS/pilum-releases/releases/latest")
+    fetch("https://api.github.com/repos/PilumRTS/releases/releases/latest")
       .then((response) => response.json())
       .then((release) => {
         for (const asset of release.assets) {
