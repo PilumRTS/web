@@ -22,7 +22,7 @@ Requires Node 22.12 or newer.
 - `src/styles/global.css`: colours, type and layout.
 - `public/`: favicons and `helmet-mask.png` (the helmet icon as an alpha mask, tinted in CSS).
 
-Download links point to <https://github.com/PilumRTS/pilum-releases/releases/latest>.
+Download buttons link straight to the latest installers in <https://github.com/PilumRTS/pilum-releases>: the build reads each `release-manifest-<os>.json`, and a script in the page swaps in newer assets from the GitHub API, so a new release needs no rebuild.
 
 ## Deploy
 

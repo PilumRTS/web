@@ -1,7 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const releases = "https://github.com/PilumRTS/pilum-releases/releases/latest";
+const repo = "https://github.com/PilumRTS/pilum-releases";
+// Direct installer URLs from the latest release's manifests; the script at the bottom refreshes them after a new release.
+async function installer(os: string) {
+  const manifest = await (await fetch(`${repo}/releases/latest/download/release-manifest-${os}.json`)).json();
+  return `${repo}/releases/download/v${manifest.version}/${manifest.installer}`;
+}
+const mac = await installer("mac");
+const windows = await installer("windows");
 const youtube = "https://www.youtube.com/@PilumRTS";
 const discord = "https://discord.gg/pv4KJVRcn3";
 const email = "info@pilumrts.com";
@@ -32,7 +39,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <h1 class="logo">PILUM</h1>
         <p class="headline">Every well you dig is a well you'll have to defend.</p>
         <div class="ctas">
-          <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
+          <a class="btn btn-primary" href="#download">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
             Download the alpha
           </a>
@@ -71,7 +78,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
             Take a building without levelling it, move your own citizens in, and man it against the people who built it.
             Whatever you leave standing can change hands.
           </p>
-          <p>Hold long enough and the landing pad becomes a spaceport. Then they send you further out.</p>
+          <p>Hold long enough and the landing pad becomes a spaceport town. Then they send you past the rim.</p>
           <p class="note">Early alpha: features and visuals may change.</p>
         </div>
       </div>
@@ -84,7 +91,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <div class="cards">
           <article class="card">
             <h3>Mac</h3>
-            <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
+            <a class="btn btn-primary" href={mac} data-download="mac">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Mac
             </a>
@@ -95,7 +102,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
           </article>
           <article class="card">
             <h3>Windows</h3>
-            <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
+            <a class="btn btn-primary" href={windows} data-download="windows">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Windows
             </a>
@@ -142,4 +149,19 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
       <span>Early alpha.</span>
     </div>
   </footer>
+
+  <script>
+    fetch("https://api.github.com/repos/PilumRTS/pilum-releases/releases/latest")
+      .then((response) => response.json())
+      .then((release) => {
+        for (const asset of release.assets) {
+          const os = asset.name.endsWith(".dmg") ? "mac" : asset.name.endsWith("-setup.exe") ? "windows" : null;
+          if (!os) continue;
+          for (const link of document.querySelectorAll<HTMLAnchorElement>(`[data-download="${os}"]`)) {
+            link.href = asset.browser_download_url;
+          }
+        }
+      })
+      .catch(() => {});
+  </script>
 </Layout>
