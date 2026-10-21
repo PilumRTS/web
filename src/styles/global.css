@@ -394,7 +394,7 @@ h2 {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -431,6 +431,12 @@ h2 {
 
 .links a:hover .link-value {
   color: var(--amber-hi);
+}
+
+@media (max-width: 720px) {
+  .links {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Footer */

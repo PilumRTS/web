@@ -32,15 +32,15 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <h1 class="logo">PILUM</h1>
         <p class="headline">Every well you dig is a well you'll have to defend.</p>
         <div class="ctas">
-          <a class="btn btn-primary" href={releases}>
+          <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
             Download the alpha
           </a>
-          <a class="btn btn-ghost" href={youtube}>
+          <a class="btn btn-ghost" href={youtube} target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" class="fill" /></svg>
             Watch on YouTube
           </a>
-          <a class="btn btn-ghost" href={discord}>
+          <a class="btn btn-ghost" href={discord} target="_blank" rel="noopener">
             Join the Discord
           </a>
         </div>
@@ -84,7 +84,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <div class="cards">
           <article class="card">
             <h3>Mac</h3>
-            <a class="btn btn-primary" href={releases}>
+            <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Mac
             </a>
@@ -95,7 +95,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
           </article>
           <article class="card">
             <h3>Windows</h3>
-            <a class="btn btn-primary" href={releases}>
+            <a class="btn btn-primary" href={releases} target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Windows
             </a>
@@ -114,21 +114,15 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <h2>Stay on the line</h2>
         <ul class="links">
           <li>
-            <a href={youtube}>
+            <a href={youtube} target="_blank" rel="noopener">
               <span class="link-kind">YouTube</span>
               <span class="link-value">@PilumRTS</span>
             </a>
           </li>
           <li>
-            <a href={discord}>
+            <a href={discord} target="_blank" rel="noopener">
               <span class="link-kind">Discord</span>
               <span class="link-value">Pilum RTS</span>
-            </a>
-          </li>
-          <li>
-            <a href={releases}>
-              <span class="link-kind">GitHub releases</span>
-              <span class="link-value">PilumRTS/pilum-releases</span>
             </a>
           </li>
           <li>
