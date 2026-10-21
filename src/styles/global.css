@@ -290,6 +290,7 @@ a:focus-visible,
 .label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   margin: 0 0 14px;
   font: 500 0.95rem/1 var(--font-head);
@@ -304,6 +305,7 @@ a:focus-visible,
   color: var(--muted);
 }
 
+.label::before,
 .label::after {
   content: "";
   flex: 1;
@@ -317,6 +319,7 @@ h2 {
   font: 700 clamp(2rem, 6vw, 3.6rem)/1.02 var(--font-head);
   text-transform: uppercase;
   color: var(--cream);
+  text-align: center;
   text-wrap: balance;
 }
 
@@ -326,6 +329,8 @@ h2 {
 
 .copy {
   max-width: 62ch;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .copy p {
@@ -340,8 +345,6 @@ h2 {
 
 .copy .note {
   margin-top: 2em;
-  padding-left: 14px;
-  border-left: 2px solid var(--amber);
   font-size: 0.95rem;
   color: var(--muted);
 }
