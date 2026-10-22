@@ -125,3 +125,7 @@ The user requested removal of the large hero helmet and hero Early alpha badge. 
 ## Visitor platform order
 
 Supported Mac/Windows platform detection is centralized in `src/lib/download-platform.js`, preferring User-Agent Client Hints platform and falling back to navigator platform/user-agent. A recognized OS moves its actual download card first in the DOM, so left/first-stacked and keyboard order agree; both cards remain. Unknown devices keep server order. The same detection preselects generic hero/header Download forms, while named Mac/Windows buttons always select their explicit OS. Optional updates remain unchecked and independent of download access.
+
+## Market clarification
+
+The user explicitly identified the United States as Pilum's first market on 22 October. Do not infer company domicile, applicable law or market from the workstation timezone. The updates checkbox remains unchecked in the shipped popup; no instruction to change its default was given with this clarification.
