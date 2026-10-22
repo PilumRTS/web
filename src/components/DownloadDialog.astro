@@ -32,6 +32,14 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 </dialog>
 
 <script>
+  import { detectDownloadPlatform } from '../lib/download-platform.js';
+
+  const detectedPlatform = detectDownloadPlatform(navigator);
+  const cards = document.querySelector<HTMLElement>('[data-download-cards]');
+  const preferredCard = detectedPlatform ? cards?.querySelector<HTMLElement>(`[data-platform-card="${detectedPlatform}"]`) : null;
+  // Move the real card so visual and keyboard order agree on desktop and mobile.
+  if (cards && preferredCard && cards.firstElementChild !== preferredCard) cards.prepend(preferredCard);
+
   const dialog = document.querySelector<HTMLDialogElement>('#download-dialog');
   const form = document.querySelector<HTMLFormElement>('#download-form');
   if (dialog && form) {
@@ -49,7 +57,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
           status.textContent = '';
           delete status.dataset.error;
           const selectedPlatform = form.querySelector<HTMLSelectElement>('[name="platform"]')!;
-          selectedPlatform.value = trigger.dataset.download === 'windows' ? 'windows' : trigger.dataset.download === 'mac' ? 'mac' : /Win/i.test(navigator.userAgent) ? 'windows' : 'mac';
+          selectedPlatform.value = trigger.dataset.download === 'windows' ? 'windows' : trigger.dataset.download === 'mac' ? 'mac' : detectedPlatform ?? 'mac';
         }
         dialog.showModal();
         document.documentElement.classList.add('dialog-open');
