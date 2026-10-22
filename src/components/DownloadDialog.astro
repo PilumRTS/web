@@ -49,11 +49,19 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
     const email = form.querySelector<HTMLInputElement>('[name="email"]')!;
     let opener: HTMLElement | null = null;
     let busy = false;
+    let closeTimer: ReturnType<typeof setTimeout> | null = null;
+    const cancelAutoClose = () => {
+      if (closeTimer !== null) clearTimeout(closeTimer);
+      closeTimer = null;
+    };
 
     for (const trigger of document.querySelectorAll<HTMLElement>('[data-download]')) {
       trigger.addEventListener('click', () => {
         opener = trigger;
+        cancelAutoClose();
         if (!busy) {
+          fieldset.disabled = false;
+          submit.textContent = 'Send download link';
           status.textContent = '';
           delete status.dataset.error;
           const selectedPlatform = form.querySelector<HTMLSelectElement>('[name="platform"]')!;
@@ -70,6 +78,11 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
       if (event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) dialog.close();
     });
     dialog.addEventListener('close', () => {
+      cancelAutoClose();
+      if (!busy) {
+        fieldset.disabled = false;
+        submit.textContent = 'Send download link';
+      }
       document.documentElement.classList.remove('dialog-open');
       opener?.focus();
     });
@@ -77,6 +90,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
       event.preventDefault();
       if (busy || !form.reportValidity()) return;
       const values = new FormData(form);
+      cancelAutoClose();
+      let sent = false;
       busy = true;
       fieldset.disabled = true;
       submit.textContent = 'Sending…';
@@ -97,15 +112,22 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         if (!response.ok) throw new Error(typeof result.message === 'string' ? result.message : 'We couldn’t send your email. Please try again.');
         const platformName = values.get('platform') === 'windows' ? 'Windows' : 'Mac';
         status.textContent = `Check your inbox. Your ${platformName} download link is on its way. If you don’t see the email, check spam.`;
-        status.focus();
+        sent = true;
+        if (dialog.open) {
+          status.focus();
+          closeTimer = setTimeout(() => {
+            closeTimer = null;
+            dialog.close();
+          }, 2000);
+        }
       } catch (error) {
         status.dataset.error = 'true';
         status.textContent = error instanceof Error && error.name !== 'TypeError' && error.name !== 'AbortError' ? error.message : 'We couldn’t reach the download service. Please try again shortly.';
       } finally {
         clearTimeout(timeout);
         busy = false;
-        fieldset.disabled = false;
-        submit.textContent = 'Send download link';
+        fieldset.disabled = sent && dialog.open;
+        submit.textContent = sent && dialog.open ? 'Email sent' : 'Send download link';
       }
     });
   }

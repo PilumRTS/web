@@ -54,7 +54,14 @@ export async function emailPreferences(request: Request, env: PreferenceEnv, pur
   if (!['GET', 'HEAD', 'POST'].includes(request.method)) return preferencePage('Use your email link', '<p>Open the preferences or unsubscribe link in your Pilum email.</p>', 405);
   const token = url.searchParams.get('token') ?? '';
   if (!/^[a-f0-9]{64}$/.test(token)) return preferencePage('Link incomplete', '<p>Use the full preferences or unsubscribe link in your Pilum email.</p>', 400, head);
-  if (request.method === 'POST' && request.headers.get('Origin') !== env.DOWNLOAD_ORIGIN) return preferencePage('Request not accepted', '<p>Open your email link and use the button on that page.</p>', 403);
+  if (request.method === 'POST') {
+    const origin = request.headers.get('Origin');
+    // no-referrer can make native form POSTs report Origin: null. Fetch Metadata
+    // still proves these came from our own page; cross-site/null requests fail closed.
+    const sameOriginForm = request.headers.get('Sec-Fetch-Site') === 'same-origin';
+    const trustedOrigin = origin === env.DOWNLOAD_ORIGIN || ((!origin || origin === 'null') && sameOriginForm);
+    if (!trustedOrigin) return preferencePage('Request not accepted', '<p>Open your email link and use the button on that page.</p>', 403);
+  }
   const tokenHash = await preferenceHash(purpose, token);
   const record = await env.DB.prepare(`SELECT s.id, s.email, s.updates_opt_in FROM email_preference_tokens t
     JOIN subscribers s ON s.id=t.subscriber_id WHERE t.token_hash=? AND t.purpose=?`)

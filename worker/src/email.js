@@ -26,11 +26,12 @@ export function downloadEmail({ platform, url, updates, preferencesUrl, unsubscr
 <h1 style="margin:0 0 16px;color:#ecdfc3;font-family:'Saira Condensed',Impact,'Arial Narrow',Arial,sans-serif;font-size:30px;line-height:1.15;font-weight:normal;text-transform:uppercase;letter-spacing:1px;">You're cleared to ship out.</h1>
 <p style="margin:0 0 26px;font-size:16px;line-height:1.65;">Your ${label} alpha download is ready. Join us on the frontier.</p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td bgcolor="#e0962f" align="center" style="border:1px solid #f0ad4a;"><a href="${url}" style="display:block;padding:17px 16px;color:#17110a;font-family:'Arial Narrow',Arial,sans-serif;font-size:14px;line-height:1.3;font-weight:bold;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">Download for ${label}</a></td></tr></table>
-<p style="margin:22px 0 0;font-size:12px;line-height:1.65;color:#9a8e76;">This link works for seven days and delivers the latest alpha. Need it again? Request a new email at <a href="https://pilumrts.com/#download" style="color:#c3a067;">pilumrts.com</a>.</p>
+<p style="margin:22px 0 0;font-size:12px;line-height:1.65;color:#9a8e76;">This link works for seven days and delivers the latest alpha. Need it again? Request a new email at <a href="https://pilumrts.com/#download" style="color:#f0ad4a;">pilumrts.com</a>.</p>
 <p style="margin:22px 0 0;font-size:13px;line-height:1.65;color:#d8ccb2;">${instructions}</p>
-<p style="margin:26px 0 0;font-size:14px;line-height:1.6;">Watch development on <a href="https://www.youtube.com/@PilumRTS" style="color:#f0ad4a;">YouTube</a> and join us on <a href="https://discord.gg/pv4KJVRcn3" style="color:#f0ad4a;">Discord</a>. You can also reply to this email.</p>
+<p style="margin:26px 0 0;font-size:14px;line-height:1.6;">Follow game development on <a href="https://www.youtube.com/@PilumRTS" style="color:#f0ad4a;">YouTube</a> and join us on <a href="https://discord.gg/pv4KJVRcn3" style="color:#f0ad4a;">Discord</a>.</p>
+<p style="margin:18px 0 0;font-size:14px;line-height:1.6;">You can also reply to this email.</p>
 </td></tr>
-<tr><td style="padding:22px 28px;border-top:1px solid #493b27;font-size:11px;line-height:1.7;color:#9a8e76;">You requested this download link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates.' : 'This request does not subscribe you to update emails.'}<p style="margin:18px 0 12px;"><a href="${unsubscribeUrl}" style="display:inline-block;padding:10px 14px;border:1px solid #75603d;color:#ecdfc3;text-decoration:none;font-weight:bold;">Unsubscribe from updates</a></p><p style="margin:0 0 18px;">Or <a href="${preferencesUrl}" style="color:#c3a067;">update your email preferences</a>.</p>Didn't request this? You can ignore it, or contact <a href="mailto:info@pilumrts.com" style="color:#c3a067;">info@pilumrts.com</a>.<br>© 2026 Pilum. Early alpha.</td></tr>
+<tr><td style="padding:22px 28px;border-top:1px solid #493b27;font-size:11px;line-height:1.7;color:#9a8e76;">You requested this download link on <a href="https://pilumrts.com/" style="color:#f0ad4a;">pilumrts.com</a>. ${updates ? 'You also asked to hear about Pilum updates.' : 'This request does not subscribe you to update emails.'}<p style="margin:18px 0;">No longer want to receive these emails? <a href="${unsubscribeUrl}" style="color:#f0ad4a;">Click here</a> or <a href="${preferencesUrl}" style="color:#f0ad4a;">update your preferences</a>.</p>Didn't request this? You can ignore it, or contact <a href="mailto:info@pilumrts.com" style="color:#f0ad4a;">info@pilumrts.com</a>.</td></tr>
 </table></td></tr></table></body></html>`;
   const text = `PILUM — EARLY ALPHA
 A grimdark tactical RTS of frontier colonies and war.
@@ -43,15 +44,14 @@ This link works for seven days and delivers the latest alpha. Request a new link
 
 ${plainInstructions}
 
-YouTube: https://www.youtube.com/@PilumRTS
-Discord: https://discord.gg/pv4KJVRcn3
-Reply to this email with feedback.
+Follow game development on YouTube: https://www.youtube.com/@PilumRTS
+Join us on Discord: https://discord.gg/pv4KJVRcn3
+
+You can also reply to this email.
 
 You requested this link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates.' : 'This request does not subscribe you to update emails.'}
-Unsubscribe from updates: ${unsubscribeUrl}
-Update your email preferences: ${preferencesUrl}
+No longer want to receive these emails? Click here (${unsubscribeUrl}) or update your preferences (${preferencesUrl}).
 
-Didn't request this? Ignore it, or contact info@pilumrts.com.
-© 2026 Pilum. Early alpha.`;
+Didn't request this? Ignore it, or contact info@pilumrts.com.`;
   return { subject: `Your Pilum alpha for ${label}`, html, text };
 }
