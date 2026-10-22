@@ -9,11 +9,21 @@
     {
       "pattern": "downloads.pilumrts.com",
       "custom_domain": true
+    },
+    {
+      "pattern": "download.pilumrts.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "mail.pilumrts.com",
+      "custom_domain": true
     }
   ],
   "vars": {
     "SITE_ORIGIN": "https://pilumrts.com",
-    "DOWNLOAD_ORIGIN": "https://downloads.pilumrts.com",
+    "DOWNLOAD_ORIGIN": "https://download.pilumrts.com",
+    "LEGACY_DOWNLOAD_ORIGIN": "https://downloads.pilumrts.com",
+    "MAIL_ORIGIN": "https://mail.pilumrts.com",
     "EMAIL_FROM": "info@pilumrts.com"
   },
   "d1_databases": [

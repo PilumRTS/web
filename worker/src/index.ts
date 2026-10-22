@@ -9,6 +9,8 @@ interface Env {
   EMAIL: { send(message: { from: { email: string; name: string }; to: string; subject: string; html: string; text: string; replyTo: string }): Promise<{ messageId: string }> };
   SITE_ORIGIN: string;
   DOWNLOAD_ORIGIN: string;
+  MAIL_ORIGIN?: string;
+  LEGACY_DOWNLOAD_ORIGIN?: string;
   EMAIL_FROM: string;
   RATE_LIMIT_SALT: string;
   DISCORD_SIGNUP_WEBHOOK_URL?: string;
@@ -137,11 +139,11 @@ async function requestDownloads(request: Request, env: Env, ctx: ExecutionContex
   const message = downloadEmail({
     platform, url: `${env.DOWNLOAD_ORIGIN}/download?token=${token}&platform=${platform}`,
     updates: Boolean(subscriber.updates_opt_in),
-    preferencesUrl: `${env.DOWNLOAD_ORIGIN}/preferences?token=${preferencesToken}`,
-    unsubscribeUrl: `${env.DOWNLOAD_ORIGIN}/unsubscribe?token=${unsubscribeToken}`,
+    preferencesUrl: `${env.MAIL_ORIGIN || env.DOWNLOAD_ORIGIN}/preferences?token=${preferencesToken}`,
+    unsubscribeUrl: `${env.MAIL_ORIGIN || env.DOWNLOAD_ORIGIN}/unsubscribe?token=${unsubscribeToken}`,
   });
   try {
-    const result = await env.EMAIL.send({ from: { email: senderAddress, name: 'Pilum' }, to: email, replyTo: senderAddress, ...message });
+    const result = await env.EMAIL.send({ from: { email: senderAddress, name: 'Alex from Pilum' }, to: email, replyTo: senderAddress, ...message });
     await env.DB.prepare("UPDATE subscribers SET last_send_status='sent', last_sent_at=?, message_id=? WHERE id=?")
       .bind(time, result.messageId, subscriber.id).run();
   } catch {

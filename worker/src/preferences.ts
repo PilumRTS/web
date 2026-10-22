@@ -1,6 +1,6 @@
 import type { D1Database } from '@cloudflare/workers-types';
 
-type PreferenceEnv = { DB: D1Database; DOWNLOAD_ORIGIN: string };
+type PreferenceEnv = { DB: D1Database; DOWNLOAD_ORIGIN: string; MAIL_ORIGIN?: string; LEGACY_DOWNLOAD_ORIGIN?: string };
 type Purpose = 'preferences' | 'unsubscribe';
 type PreferenceRecord = { id: string; email: string; updates_opt_in: number };
 const seconds = () => Math.floor(Date.now() / 1000);
@@ -51,6 +51,8 @@ async function readForm(request: Request): Promise<URLSearchParams> {
 export async function emailPreferences(request: Request, env: PreferenceEnv, purpose: Purpose): Promise<Response> {
   const url = new URL(request.url);
   const head = request.method === 'HEAD';
+  const allowedOrigins = [env.DOWNLOAD_ORIGIN, env.MAIL_ORIGIN, env.LEGACY_DOWNLOAD_ORIGIN].filter(Boolean);
+  if (!allowedOrigins.includes(url.origin)) return preferencePage('Link unavailable', '<p>Use the preferences or unsubscribe link in your Pilum email.</p>', 403, head);
   if (!['GET', 'HEAD', 'POST'].includes(request.method)) return preferencePage('Use your email link', '<p>Open the preferences or unsubscribe link in your Pilum email.</p>', 405);
   const token = url.searchParams.get('token') ?? '';
   if (!/^[a-f0-9]{64}$/.test(token)) return preferencePage('Link incomplete', '<p>Use the full preferences or unsubscribe link in your Pilum email.</p>', 400, head);
@@ -59,7 +61,7 @@ export async function emailPreferences(request: Request, env: PreferenceEnv, pur
     // no-referrer can make native form POSTs report Origin: null. Fetch Metadata
     // still proves these came from our own page; cross-site/null requests fail closed.
     const sameOriginForm = request.headers.get('Sec-Fetch-Site') === 'same-origin';
-    const trustedOrigin = origin === env.DOWNLOAD_ORIGIN || ((!origin || origin === 'null') && sameOriginForm);
+    const trustedOrigin = origin === url.origin || ((!origin || origin === 'null') && sameOriginForm);
     if (!trustedOrigin) return preferencePage('Request not accepted', '<p>Open your email link and use the button on that page.</p>', 403);
   }
   const tokenHash = await preferenceHash(purpose, token);
