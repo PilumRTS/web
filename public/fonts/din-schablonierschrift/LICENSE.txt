@@ -1,0 +1,13 @@
+DIN Schablonierschrift
+Created by Marian Steinbach.
+
+Licensed under Creative Commons ShareAlike 1.0 Generic (CC SA 1.0).
+License: https://creativecommons.org/licenses/sa/1.0/
+Legal code: https://creativecommons.org/licenses/sa/1.0/legalcode
+
+The author's upstream README declares the license above; it is preserved in
+UPSTREAM-README.md. The author's original bundled specimen/license document
+is preserved as dinschab.pdf. Keep these notices and the license URI with
+redistributed copies. Derivative font files must retain the same license.
+
+The served Version 2 WOFF is the author's original unmodified webfont.

@@ -1,14 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-const repo = "https://github.com/PilumRTS/releases";
-// Direct installer URLs from the latest release's manifests; the script at the bottom refreshes them after a new release.
-async function installer(os: string) {
-  const manifest = await (await fetch(`${repo}/releases/latest/download/release-manifest-${os}.json`)).json();
-  return `${repo}/releases/download/v${manifest.version}/${manifest.installer}`;
-}
-const mac = await installer("mac");
-const windows = await installer("windows");
+import DownloadDialog from "../components/DownloadDialog.astro";
 const youtube = "https://www.youtube.com/@PilumRTS";
 const discord = "https://discord.gg/pv4KJVRcn3";
 const email = "info@pilumrts.com";
@@ -27,7 +19,7 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
     <nav aria-label="Sections">
       <a href="#about">About</a>
       <a href="#gameplay">Gameplay</a>
-      <a href="#download">Download</a>
+      <button type="button" data-download="both" aria-haspopup="dialog">Download</button>
       <a href="#follow">Follow</a>
     </nav>
   </header>
@@ -41,10 +33,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <p class="headline"><span>Build your colony by day,</span> <span>fight off enemies by night.</span></p>
         <p class="setting">A grimdark tactical RTS of frontier colonies and war.</p>
         <div class="ctas">
-          <a class="btn btn-primary" href="#download">
+          <button class="btn btn-primary" type="button" data-download="both" aria-haspopup="dialog">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
             Download the alpha
-          </a>
+          </button>
           <a class="btn btn-ghost" href={youtube} target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" class="fill" /></svg>
             Watch on YouTube
@@ -96,16 +88,16 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
             <h3>4 squad types</h3>
             <ul>
               <li><strong>Assault</strong>, ten rifles with frags, smoke, C4 charges and grappling hooks.</li>
-              <li><strong>Support</strong>, three men with a heavy machine gun, AP mines and a sentry gun.</li>
-              <li><strong>Engineers</strong>, armed with AT rockets, AT mines and the tools to repair vehicles.</li>
-              <li><strong>Recon</strong>, three snipers with a drone, motion trackers and a cloak that turns them into a shimmer in the air.</li>
+              <li><strong>Support</strong>, three men with heavy machine guns, AP mines and a sentry gun.</li>
+              <li><strong>Engineers</strong>, three men with AT rockets, AT mines and tools to repair vehicles.</li>
+              <li><strong>Recon</strong>, three snipers with a drone, motion trackers and cloaks that turn them into a shimmer in the air.</li>
             </ul>
           </article>
           <article class="card feature">
             <h3>Wounds and loot</h3>
             <ul>
               <li>Wounds land where the round did: a hit arm spoils his aim and his throw, one bad leg and he can't sprint.</li>
-              <li>Low on supplies? The dead don't need theirs. Soldiers strip the fallen of their ammo and supplies. The enemy loots yours.</li>
+              <li>Low on supplies? The dead don't need theirs. Soldiers strip the fallen of their ammo and supplies. Enemies loot too.</li>
               <li>A killing hit knocks a hull out. Some burn, most lie there for whichever side's engineers reach them first, to repair and crew.</li>
             </ul>
           </article>
@@ -194,10 +186,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
         <div class="cards">
           <article class="card">
             <h3>Mac</h3>
-            <a class="btn btn-primary" href={mac} data-download="mac">
+            <button class="btn btn-primary" type="button" data-download="mac" aria-haspopup="dialog">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Mac
-            </a>
+            </button>
             <p class="small">
               The Mac build isn't notarized yet. On first launch, open System Settings → Privacy &amp; Security and
               click <strong>Open Anyway</strong>.
@@ -205,16 +197,18 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
           </article>
           <article class="card">
             <h3>Windows</h3>
-            <a class="btn btn-primary" href={windows} data-download="windows">
+            <button class="btn btn-primary" type="button" data-download="windows" aria-haspopup="dialog">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16" /></svg>
               Download for Windows
-            </a>
+            </button>
             <p class="small">
-              SmartScreen may say “Windows protected your PC”. Click <strong>More info</strong> →
+              On first opening the installer, SmartScreen may show “Windows protected your PC”. Click <strong>More info</strong> →
               <strong>Run anyway</strong>.
             </p>
           </article>
         </div>
+        <p class="download-email-note">Leave your email and we’ll send you the download link.</p>
+        <noscript><p class="download-email-note">Enable JavaScript to request your downloads, or email <a href={`mailto:${email}`}>{email}</a>.</p></noscript>
       </div>
     </section>
 
@@ -249,22 +243,10 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
   <footer class="footer">
     <div class="wrap">
       <span>© 2026 Pilum.</span>
+      <a href="/privacy/">Privacy</a>
       <span>Early alpha.</span>
     </div>
   </footer>
 
-  <script>
-    fetch("https://api.github.com/repos/PilumRTS/releases/releases/latest")
-      .then((response) => response.json())
-      .then((release) => {
-        for (const asset of release.assets) {
-          const os = asset.name.endsWith(".dmg") ? "mac" : asset.name.endsWith("-setup.exe") ? "windows" : null;
-          if (!os) continue;
-          for (const link of document.querySelectorAll<HTMLAnchorElement>(`[data-download="${os}"]`)) {
-            link.href = asset.browser_download_url;
-          }
-        }
-      })
-      .catch(() => {});
-  </script>
+  <DownloadDialog />
 </Layout>

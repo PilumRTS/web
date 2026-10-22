@@ -1,0 +1,104 @@
+---
+const endpoint = import.meta.env.PUBLIC_DOWNLOAD_API_URL || "https://downloads.pilumrts.com/request";
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+---
+
+<dialog id="download-dialog" class="download-dialog" aria-labelledby="download-title" aria-describedby="download-description" data-endpoint={endpoint}>
+  <button class="dialog-close" type="button" aria-label="Close download form">×</button>
+  <div class="dialog-brand" aria-hidden="true">
+    <span class="brand-mark" style={`--mask: url(${base}helmet-mask.png)`}></span>
+    <span class="brand-name">PILUM</span>
+  </div>
+  <p class="dialog-kicker">Early alpha · Mac and Windows</p>
+  <h2 id="download-title">Get the alpha</h2>
+  <p id="download-description">Choose your platform and we’ll email your download link.</p>
+  <form id="download-form">
+    <fieldset>
+      <div class="email-field"><label for="download-platform">Platform</label><select id="download-platform" name="platform" required><option value="mac">Mac</option><option value="windows">Windows</option></select></div>
+      <div class="email-field">
+        <label for="download-email">Email address</label>
+        <input id="download-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.com" required autofocus />
+      </div>
+      <div class="form-trap" aria-hidden="true">
+        <label for="download-website">Website</label>
+        <input id="download-website" name="website" type="text" autocomplete="off" tabindex="-1" />
+      </div>
+      <label class="updates-option"><input type="checkbox" name="updates" /><span>Keep me posted about Pilum.</span></label>
+      <button class="btn btn-primary" type="submit">Send download link</button>
+    </fieldset>
+    <p class="form-status" role="status" aria-live="polite" tabindex="-1"></p>
+    <p class="form-privacy">We save your email to deliver your download. Updates are optional. <a href="/privacy/">Privacy</a></p>
+  </form>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#download-dialog');
+  const form = document.querySelector<HTMLFormElement>('#download-form');
+  if (dialog && form) {
+    const fieldset = form.querySelector<HTMLFieldSetElement>('fieldset')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const status = form.querySelector<HTMLParagraphElement>('.form-status')!;
+    const email = form.querySelector<HTMLInputElement>('[name="email"]')!;
+    let opener: HTMLElement | null = null;
+    let busy = false;
+
+    for (const trigger of document.querySelectorAll<HTMLElement>('[data-download]')) {
+      trigger.addEventListener('click', () => {
+        opener = trigger;
+        if (!busy) {
+          status.textContent = '';
+          delete status.dataset.error;
+          const selectedPlatform = form.querySelector<HTMLSelectElement>('[name="platform"]')!;
+          selectedPlatform.value = trigger.dataset.download === 'windows' ? 'windows' : trigger.dataset.download === 'mac' ? 'mac' : /Win/i.test(navigator.userAgent) ? 'windows' : 'mac';
+        }
+        dialog.showModal();
+        document.documentElement.classList.add('dialog-open');
+        if (!busy) email.focus();
+      });
+    }
+    dialog.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => {
+      const bounds = dialog.getBoundingClientRect();
+      if (event.target === dialog && (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom)) dialog.close();
+    });
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('dialog-open');
+      opener?.focus();
+    });
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (busy || !form.reportValidity()) return;
+      const values = new FormData(form);
+      busy = true;
+      fieldset.disabled = true;
+      submit.textContent = 'Sending…';
+      delete status.dataset.error;
+      status.textContent = '';
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      try {
+        const response = await fetch(dialog.dataset.endpoint!, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+          signal: controller.signal,
+          body: JSON.stringify({ email: values.get('email'), platform: values.get('platform'), updates: values.get('updates') === 'on', website: values.get('website') }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(typeof result.message === 'string' ? result.message : 'We couldn’t send your email. Please try again.');
+        const platformName = values.get('platform') === 'windows' ? 'Windows' : 'Mac';
+        status.textContent = `Check your inbox. Your ${platformName} download link is on its way. If you don’t see the email, check spam.`;
+        status.focus();
+      } catch (error) {
+        status.dataset.error = 'true';
+        status.textContent = error instanceof Error && error.name !== 'TypeError' && error.name !== 'AbortError' ? error.message : 'We couldn’t reach the download service. Please try again shortly.';
+      } finally {
+        clearTimeout(timeout);
+        busy = false;
+        fieldset.disabled = false;
+        submit.textContent = 'Send download link';
+      }
+    });
+  }
+</script>

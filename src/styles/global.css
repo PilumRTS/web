@@ -1,3 +1,14 @@
+/* DIN Schablonierschrift by Marian Steinbach, CC SA 1.0.
+   License: https://creativecommons.org/licenses/sa/1.0/
+   Original unmodified author webfont; provenance: /fonts/din-schablonierschrift/README.md */
+@font-face {
+  font-family: "DIN Schablonierschrift";
+  src: url("/fonts/din-schablonierschrift/DIN_Schablonierschrift.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --bg: #0d0c0a;
   --bg-2: #15130f;
@@ -9,7 +20,7 @@
   --muted: #9a8e76;
   --amber: #e0962f;
   --amber-hi: #f0ad4a;
-  --font-display: "Saira Stencil One", "Saira Condensed", Impact, sans-serif;
+  --font-display: "DIN Schablonierschrift", "Saira Condensed", Impact, sans-serif;
   --font-head: "Saira Condensed", "Arial Narrow", sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 48px);
@@ -552,3 +563,77 @@ h2 {
     animation: none !important;
   }
 }
+
+/* Download request: the same sand, amber and stencilled panels as the landing page. */
+button { font: inherit; }
+.btn { border: 0; cursor: pointer; }
+.topbar nav button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: 500 0.95rem/1 var(--font-head);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.topbar nav button:hover { color: var(--cream); }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--amber-hi);
+  outline-offset: 3px;
+}
+.download-email-note { margin: 26px 0 0; text-align: center; color: var(--muted); font-size: .94rem; }
+.dialog-open { overflow: hidden; }
+.download-dialog {
+  position: fixed;
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 34px;
+  overflow: auto;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid #6a5231;
+  box-shadow: 0 20px 100px #000;
+}
+.download-dialog::backdrop { background: rgb(0 0 0 / .76); backdrop-filter: blur(5px); }
+.dialog-close {
+  position: absolute; top: 9px; right: 10px;
+  width: 36px; height: 36px; padding: 0;
+  border: 0; background: transparent; color: var(--muted);
+  font: 28px/1 var(--font-body); cursor: pointer;
+}
+.dialog-close:hover { color: var(--cream); }
+.dialog-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; color: var(--cream); }
+.dialog-brand .brand-name { display: block; }
+.dialog-kicker { margin: 0 0 12px; color: var(--amber-hi); font: 500 .85rem/1.4 var(--font-head); letter-spacing: .18em; text-transform: uppercase; }
+.download-dialog h2 { margin: 0 0 12px; text-align: left; font-size: 2.8rem; }
+#download-description { margin: 0 0 24px; font-size: 1rem; }
+.download-dialog fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.email-field label { display: block; margin-bottom: 8px; color: var(--cream); font-size: .9rem; }
+.email-field input {
+  display: block; width: 100%; min-height: 48px;
+  border: 1px solid #6a5231; border-radius: 0;
+  padding: 11px 13px; background: var(--bg); color: var(--cream);
+  font: 1rem/1.5 var(--font-body);
+}
+.email-field input::placeholder { color: var(--muted); }
+.updates-option { display: flex; align-items: flex-start; gap: 10px; margin: 18px 0 24px; font-size: .9rem; cursor: pointer; }
+.updates-option input { width: 18px; height: 18px; margin: 3px 0 0; flex: none; accent-color: var(--amber); }
+.download-dialog .btn { width: 100%; }
+.download-dialog fieldset:disabled { opacity: .6; }
+.form-status { margin: 18px 0 0; font-size: .94rem; color: var(--cream); }
+.form-status:empty { display: none; }
+.form-status[data-error] { color: #f0ad4a; }
+.form-privacy { margin: 18px 0 0; color: var(--muted); font-size: .75rem; line-height: 1.6; }
+.form-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.privacy-page .wrap { max-width: 760px; }
+.privacy-page .label { margin-top: 36px; }
+.privacy-page h1 { color: var(--cream); font: 700 3rem/1.1 var(--font-head); text-transform: uppercase; text-align: center; }
+@media (max-width: 520px) {
+  .download-dialog { padding: 30px 22px; }
+  .topbar nav button { font-size: .85rem; letter-spacing: .1em; }
+}
+
+/* Match the required platform picker to the download form. */
+.download-dialog select { width: 100%; padding: 0.8rem; color: var(--color-text, #ecdfc3); background: #15130f; border: 1px solid #75603d; font: inherit; }

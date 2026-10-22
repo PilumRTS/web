@@ -19,3 +19,14 @@ npm-debug.log*
 # editor
 .idea/
 .vscode/
+
+# Cloudflare local state and secrets
+.wrangler/
+.dev.vars
+.dev.vars.*
+worker/.wrangler/
+worker/.dev.vars
+worker/.dev.vars.*
+
+# Local email preview and bundle scratch files
+/work/
