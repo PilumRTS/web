@@ -16,9 +16,10 @@ Worker secrets are `RATE_LIMIT_SALT` and `DISCORD_SIGNUP_WEBHOOK_URL`. The nativ
 
 ## Deployment access
 
-The GitHub environment `worker-production` is configured to allow only `main`. Its `CLOUDFLARE_API_TOKEN` secret must be connected before the first deployment. The account ID is a public identifier in the workflow/config. Use a token limited to the existing Worker, the existing D1 database and the Pilum zone wherever Cloudflare supports resource-specific scopes:
+The GitHub environment `worker-production` is configured to allow only `main`. Its `CLOUDFLARE_API_TOKEN` secret is connected and the first authenticated deployment succeeded. The account ID is a public identifier in the workflow/config. Use a token limited to the existing Worker, the existing D1 database and the Pilum zone wherever Cloudflare supports resource-specific scopes:
 
-- Worker Editor / Workers Scripts Edit: deploy `pilum-downloads`.
+- Individual Worker Editor: deploy `pilum-downloads`.
+- Workers Metadata Read-Only at the Pilum account scope: required for Wrangler’s account-level route/domain discovery. The initial single-Worker Editor token could read the Worker and D1 but received HTTP 403 on those discovery endpoints; adding this read-only role resolved both. Write access remains scoped to the existing Worker.
 - D1 Write: apply migrations and obtain recovery bookmarks. The current Cloudflare form scopes this permission to the Pilum account, not an individual database; the review explicitly shows that account-level scope.
 - Zone Workers Routes Write and Zone Read: reconcile the three custom domains in the Pilum zone.
 
@@ -66,4 +67,6 @@ For an export recovery drill, an operator with resource-creation access can crea
 
 ## Verification record
 
-Source preparation and command syntax were reviewed on 22 October 2026. Record the first successful authenticated workflow run and recovery-bookmark check here after credentials are connected. Production restore has not been exercised. This document does not claim off-provider backups or a tested full disaster recovery.
+On 22 October 2026, [workflow run 39789139611, attempt 2](https://github.com/PilumRTS/web/actions/runs/39789139611) completed successfully for commit `0fca3af`. It checked/bundled the source, read a live D1 recovery bookmark, confirmed there were no unapplied migrations, deployed version `07d70f56-9ee5-4fd9-8cb1-e9dcbf0872b4`, and passed all four public-route checks plus both logo-image requests. It sent no email and changed no subscriber preferences. The first attempt failed during read-only dashboard metadata discovery before uploading; the approved account-level metadata-read role fixed that failure without expanding Worker write access. The existing GitHub Actions secret did not need replacement.
+
+Production restore has not been exercised. No scheduled off-provider export is configured, and this document does not claim a tested full disaster recovery.
