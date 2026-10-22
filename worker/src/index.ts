@@ -2,6 +2,7 @@ import type { D1Database, ExecutionContext } from '@cloudflare/workers-types';
 import { downloadEmail } from './email.js';
 import { notifySignups } from './notifications';
 import { wordmarkPng, helmetPng } from './wordmark.js';
+import { emailPreferences, preferenceHash, randomToken } from './preferences';
 
 interface Env {
   DB: D1Database;
@@ -104,23 +105,41 @@ async function requestDownloads(request: Request, env: Env, ctx: ExecutionContex
   const time = now();
   // Existing opt-in is retained; a download request cannot silently unsubscribe it.
   const subscriber = await env.DB.prepare(`INSERT INTO subscribers
-    (id, email, platform, updates_opt_in, consent_version, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    (id, email, platform, updates_opt_in, consent_version, created_at, updated_at, updates_changed_at, updates_consent_source)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(email) DO UPDATE SET platform=excluded.platform,
       updates_opt_in=MAX(subscribers.updates_opt_in, excluded.updates_opt_in),
+      updates_unsubscribed_at=CASE WHEN excluded.updates_opt_in=1 THEN NULL ELSE subscribers.updates_unsubscribed_at END,
+      updates_changed_at=CASE WHEN excluded.updates_opt_in=1 THEN excluded.updated_at ELSE subscribers.updates_changed_at END,
+      updates_consent_source=CASE WHEN excluded.updates_opt_in=1 THEN 'download' ELSE subscribers.updates_consent_source END,
+      consent_version=CASE WHEN excluded.updates_opt_in=1 THEN excluded.consent_version ELSE subscribers.consent_version END,
       updated_at=excluded.updated_at, last_send_status='pending'
     RETURNING id, updates_opt_in`)
-    .bind(crypto.randomUUID(), email, platform, updates ? 1 : 0, consentVersion, time, time)
+    .bind(crypto.randomUUID(), email, platform, updates ? 1 : 0, consentVersion, time, time, updates ? time : null, updates ? 'download' : null)
     .first<{ id: string; updates_opt_in: number }>();
   if (!subscriber) throw new Error('subscriber-save');
   // The D1 insert trigger queued any new signup in the same transaction.
   ctx.waitUntil(notifySignups(env));
-  const token = Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join('');
+  const token = randomToken();
   const tokenHash = await hash(`${platform}:${token}`);
-  await env.DB.prepare('INSERT INTO download_tokens (token_hash, subscriber_id, created_at, expires_at) VALUES (?, ?, ?, ?)')
-    .bind(tokenHash, subscriber.id, time, time + week).run();
-  const link = (os: string) => `${env.DOWNLOAD_ORIGIN}/download?token=${token}&platform=${os}`;
-  const message = downloadEmail({ platform, url: link(platform), updates: Boolean(subscriber.updates_opt_in) });
+  const preferencesToken = randomToken();
+  const unsubscribeToken = randomToken();
+  const preferencesTokenHash = await preferenceHash('preferences', preferencesToken);
+  const unsubscribeTokenHash = await preferenceHash('unsubscribe', unsubscribeToken);
+  await env.DB.batch([
+    env.DB.prepare('INSERT INTO download_tokens (token_hash, subscriber_id, created_at, expires_at) VALUES (?, ?, ?, ?)')
+      .bind(tokenHash, subscriber.id, time, time + week),
+    env.DB.prepare('INSERT INTO email_preference_tokens (token_hash, subscriber_id, purpose, created_at) VALUES (?, ?, ?, ?)')
+      .bind(preferencesTokenHash, subscriber.id, 'preferences', time),
+    env.DB.prepare('INSERT INTO email_preference_tokens (token_hash, subscriber_id, purpose, created_at) VALUES (?, ?, ?, ?)')
+      .bind(unsubscribeTokenHash, subscriber.id, 'unsubscribe', time),
+  ]);
+  const message = downloadEmail({
+    platform, url: `${env.DOWNLOAD_ORIGIN}/download?token=${token}&platform=${platform}`,
+    updates: Boolean(subscriber.updates_opt_in),
+    preferencesUrl: `${env.DOWNLOAD_ORIGIN}/preferences?token=${preferencesToken}`,
+    unsubscribeUrl: `${env.DOWNLOAD_ORIGIN}/unsubscribe?token=${unsubscribeToken}`,
+  });
   try {
     const result = await env.EMAIL.send({ from: { email: senderAddress, name: 'Pilum' }, to: email, replyTo: senderAddress, ...message });
     await env.DB.prepare("UPDATE subscribers SET last_send_status='sent', last_sent_at=?, message_id=? WHERE id=?")
@@ -129,6 +148,7 @@ async function requestDownloads(request: Request, env: Env, ctx: ExecutionContex
     // No provider error, recipient, address or bearer token goes into public responses/logs.
     await env.DB.batch([
       env.DB.prepare('DELETE FROM download_tokens WHERE token_hash=?').bind(tokenHash),
+      env.DB.prepare('DELETE FROM email_preference_tokens WHERE token_hash IN (?, ?)').bind(preferencesTokenHash, unsubscribeTokenHash),
       env.DB.prepare("UPDATE subscribers SET last_send_status='failed' WHERE id=?").bind(subscriber.id),
     ]);
     return json({ message: 'We couldn’t send your download email. Please try again shortly.' }, 503, origin);
@@ -204,6 +224,10 @@ export default {
       if (request.method !== 'POST') return json({ message: 'Use the download form on pilumrts.com.' }, 405, origin === env.SITE_ORIGIN ? origin : undefined, { Allow: 'POST, OPTIONS' });
       try { return await requestDownloads(request, env, ctx); }
       catch { return json({ message: 'Downloads by email are temporarily unavailable. Please try again shortly.' }, 503, origin === env.SITE_ORIGIN ? origin : undefined); }
+    }
+    if (url.pathname === '/preferences' || url.pathname === '/unsubscribe') {
+      try { return await emailPreferences(request, env, url.pathname === '/preferences' ? 'preferences' : 'unsubscribe'); }
+      catch { return downloadError('Email preferences are temporarily unavailable. Please try again shortly.', 503); }
     }
     if (url.pathname === '/download' && (request.method === 'GET' || request.method === 'HEAD')) {
       try { return await download(request, env); }

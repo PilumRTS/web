@@ -1,8 +1,8 @@
 /**
  * Table layout and inline colours survive email clients that strip site CSS/fonts.
- * @param {{ platform: "mac" | "windows", url: string, updates: boolean }} links
+ * @param {{ platform: "mac" | "windows", url: string, updates: boolean, preferencesUrl: string, unsubscribeUrl: string }} links
  */
-export function downloadEmail({ platform, url, updates }) {
+export function downloadEmail({ platform, url, updates, preferencesUrl, unsubscribeUrl }) {
   const label = platform === "mac" ? "Mac" : "Windows";
   const instructions = platform === "mac"
     ? "If macOS blocks first launch, use System Settings → Privacy &amp; Security → Open Anyway."
@@ -30,7 +30,7 @@ export function downloadEmail({ platform, url, updates }) {
 <p style="margin:22px 0 0;font-size:13px;line-height:1.65;color:#d8ccb2;">${instructions}</p>
 <p style="margin:26px 0 0;font-size:14px;line-height:1.6;">Watch development on <a href="https://www.youtube.com/@PilumRTS" style="color:#f0ad4a;">YouTube</a> and join us on <a href="https://discord.gg/pv4KJVRcn3" style="color:#f0ad4a;">Discord</a>. You can also reply to this email.</p>
 </td></tr>
-<tr><td style="padding:22px 28px;border-top:1px solid #493b27;font-size:11px;line-height:1.7;color:#9a8e76;">You requested this download link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates. Reply “unsubscribe” at any time.' : 'This request does not subscribe you to update emails.'}<br>Didn't request this? You can ignore it, or contact <a href="mailto:info@pilumrts.com" style="color:#c3a067;">info@pilumrts.com</a>.<br>© 2026 Pilum. Early alpha.</td></tr>
+<tr><td style="padding:22px 28px;border-top:1px solid #493b27;font-size:11px;line-height:1.7;color:#9a8e76;">You requested this download link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates.' : 'This request does not subscribe you to update emails.'}<p style="margin:18px 0 12px;"><a href="${unsubscribeUrl}" style="display:inline-block;padding:10px 14px;border:1px solid #75603d;color:#ecdfc3;text-decoration:none;font-weight:bold;">Unsubscribe from updates</a></p><p style="margin:0 0 18px;">Or <a href="${preferencesUrl}" style="color:#c3a067;">update your email preferences</a>.</p>Didn't request this? You can ignore it, or contact <a href="mailto:info@pilumrts.com" style="color:#c3a067;">info@pilumrts.com</a>.<br>© 2026 Pilum. Early alpha.</td></tr>
 </table></td></tr></table></body></html>`;
   const text = `PILUM — EARLY ALPHA
 A grimdark tactical RTS of frontier colonies and war.
@@ -47,7 +47,10 @@ YouTube: https://www.youtube.com/@PilumRTS
 Discord: https://discord.gg/pv4KJVRcn3
 Reply to this email with feedback.
 
-You requested this link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates. Reply unsubscribe at any time.' : 'This request does not subscribe you to update emails.'}
+You requested this link on pilumrts.com. ${updates ? 'You also asked to hear about Pilum updates.' : 'This request does not subscribe you to update emails.'}
+Unsubscribe from updates: ${unsubscribeUrl}
+Update your email preferences: ${preferencesUrl}
+
 Didn't request this? Ignore it, or contact info@pilumrts.com.
 © 2026 Pilum. Early alpha.`;
   return { subject: `Your Pilum alpha for ${label}`, html, text };
