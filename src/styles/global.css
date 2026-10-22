@@ -99,6 +99,14 @@ a:focus-visible,
   border-bottom: 1px solid var(--line);
 }
 
+.header-brand { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.header-alpha { white-space: nowrap; font: 500 .8rem/1.1 var(--font-head); text-transform: uppercase; }
+@media (max-width: 640px) {
+  .topbar { flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .topbar nav { justify-content: center; flex-wrap: wrap; gap: 12px 18px; }
+  .topbar .brand-name { display: block; }
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -140,7 +148,7 @@ a:focus-visible,
 /* Hero */
 .hero {
   position: relative;
-  min-height: min(92vh, 900px);
+  min-height: min(72vh, 700px);
   display: grid;
   place-items: center;
   padding: 72px var(--gutter) 120px;

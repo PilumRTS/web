@@ -12,10 +12,13 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
   description="A grimdark tactical RTS of frontier colonies and war. You're the commander sent to the rim. Build a colony, trade with other outposts and raise an army to defend it."
 >
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="Pilum, back to top">
-      <span class="brand-mark" style={`--mask: url(${base}helmet-mask.png)`} aria-hidden="true"></span>
-      <span class="brand-name">PILUM</span>
-    </a>
+    <div class="header-brand">
+      <a class="brand" href="#top" aria-label="Pilum, back to top">
+        <span class="brand-mark" style={`--mask: url(${base}helmet-mask.png)`} aria-hidden="true"></span>
+        <span class="brand-name">PILUM</span>
+      </a>
+      <span class="tag header-alpha">Early alpha</span>
+    </div>
     <nav aria-label="Sections">
       <a href="#about">About</a>
       <a href="#gameplay">Gameplay</a>
@@ -27,8 +30,6 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
   <main id="top">
     <section class="hero" style={`--hero-backdrop: url(${base}hero-night.webp)`}>
       <div class="hero-inner">
-        <div class="helmet" style={`--mask: url(${base}helmet-mask.png)`} aria-hidden="true"></div>
-        <p class="kicker"><span class="tag">Early alpha</span></p>
         <h1 class="logo">PILUM</h1>
         <p class="headline"><span>Build your colony by day,</span> <span>fight off enemies by night.</span></p>
         <p class="setting">A grimdark tactical RTS of frontier colonies and war.</p>

@@ -117,3 +117,7 @@ The user reported stray grey outlined arrow shapes. The supplied crops were insp
 ## Popup wording and field order refinement
 
 The user requested the introduction “Get the download link directly in your inbox.”, Email address before Platform, optional checkbox “Email me when new features and updates are ready.” and footer “Unsubscribe from updates at any time.” with Privacy retained. The checkbox remains unchecked; sending a download does not require marketing consent. Generic download buttons detect the visitor's OS, while Mac/Windows buttons preserve their explicit platform intent. No live email submission is needed for these presentation checks.
+
+## Compact hero/header
+
+The user requested removal of the large hero helmet and hero Early alpha badge. The large PILUM wordmark, tagline and CTAs remain. The outlined square-corner Early alpha badge is now beside the header helmet/PILUM wordmark; the header wraps on narrow screens and keeps the wordmark visible. Hero minimum height was reduced to make the removed artwork save vertical space rather than leaving an empty tall section.
