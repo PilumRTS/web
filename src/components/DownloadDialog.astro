@@ -11,23 +11,23 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
   </div>
   <p class="dialog-kicker">Early alpha · Mac and Windows</p>
   <h2 id="download-title">Get the alpha</h2>
-  <p id="download-description">Choose your platform and we’ll email your download link.</p>
+  <p id="download-description">Get the download link directly in your inbox.</p>
   <form id="download-form">
     <fieldset>
-      <div class="email-field"><label for="download-platform">Platform</label><select id="download-platform" name="platform" required><option value="mac">Mac</option><option value="windows">Windows</option></select></div>
       <div class="email-field">
         <label for="download-email">Email address</label>
         <input id="download-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="you@example.com" required autofocus />
       </div>
+      <div class="email-field"><label for="download-platform">Platform</label><select id="download-platform" name="platform" required><option value="mac">Mac</option><option value="windows">Windows</option></select></div>
       <div class="form-trap" aria-hidden="true">
         <label for="download-website">Website</label>
         <input id="download-website" name="website" type="text" autocomplete="off" tabindex="-1" />
       </div>
-      <label class="updates-option"><input type="checkbox" name="updates" /><span>Keep me posted about Pilum.</span></label>
+      <label class="updates-option"><input type="checkbox" name="updates" /><span>Email me when new features and updates are ready.</span></label>
       <button class="btn btn-primary" type="submit">Send download link</button>
     </fieldset>
     <p class="form-status" role="status" aria-live="polite" tabindex="-1"></p>
-    <p class="form-privacy">We save your email to deliver your download. Updates are optional. <a href="/privacy/">Privacy</a></p>
+    <p class="form-privacy">Unsubscribe from updates at any time. <a href="/privacy/">Privacy</a></p>
   </form>
 </dialog>
 

@@ -9,7 +9,7 @@ The popup, D1 storage, expiring links, current DIN wordmark and branded HTML/pla
 ## Visitor flow
 
 1. Every Download button opens the required-email popup in Pilum's current sand/amber/dark style. The user-selected DIN Schablonierschrift font is self-hosted; Saira Condensed and IBM Plex Sans remain. Font license/provenance: `public/fonts/din-schablonierschrift/README.md`.
-2. Mac or Windows must be selected; OS-specific CTAs preselect that platform, while generic CTAs use an editable platform selector. Email is required. “Keep me posted about Pilum” is optional and unchecked. Download access does not require subscribing to updates.
+2. Mac or Windows must be selected; OS-specific CTAs preselect that platform, while generic CTAs use an editable platform selector. Email is required. “Email me when new features and updates are ready” is optional and unchecked. Download access does not require subscribing to updates.
 3. The Worker saves the request in D1 and sends the branded download email through its native `EMAIL.send()` binding. This is Cloudflare **Email Sending**, not incoming Email Routing.
 4. A successful provider acceptance produces the success response. Failure shows an error and invalidates that request's new token. Provider acceptance is not a delivery receipt; the site does not pretend a failed request was sent.
 5. Each email contains exactly one selected-platform button/link, platform-specific subject and instructions, with no other OS content. A random 256-bit bearer token grants access for seven days; only a hash including the selected platform is stored. Changing a new token URL to the other OS cannot resolve its hash. The original two-platform test email remains compatible until expiry. Each link resolves the latest manifest for its OS on click (Mac 0.14.0 / Windows 0.13.0 when inspected). Public GitHub binaries remain public; this gates the website flow, not the release repository.
@@ -113,3 +113,7 @@ Live Firefox interaction verified that Download for Mac opens the popup preselec
 ## Cursor consistency
 
 The user reported stray grey outlined arrow shapes. The supplied crops were inspected alongside the original hero backdrop and all site markup/CSS/assets; no matching graphic or custom cursor is defined by the site. The same glyph appears in earlier Gmail/Cloudflare computer-control screenshots, supporting an external pointer-overlay explanation, though its exact owner was not established. The website now explicitly uses pointer cursors for enabled semantic links, buttons, selects, checkboxes/radios and disclosures; disabled controls use not-allowed, while email entry keeps its text cursor.
+
+## Popup wording and field order refinement
+
+The user requested the introduction “Get the download link directly in your inbox.”, Email address before Platform, optional checkbox “Email me when new features and updates are ready.” and footer “Unsubscribe from updates at any time.” with Privacy retained. The checkbox remains unchecked; sending a download does not require marketing consent. Generic download buttons detect the visitor's OS, while Mac/Windows buttons preserve their explicit platform intent. No live email submission is needed for these presentation checks.
