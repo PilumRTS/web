@@ -56,3 +56,5 @@ The GitHub Actions workflow `.github/workflows/deploy-worker.yml` checks the Wor
 Public copy uses **Pre-alpha**. The downloadable combat build is playable; colony building and the economy are in development. Planned systems are identified on the gameplay cards. Download emails use the same stage. Historical installer versions retain their original release names.
 
 The hero WebP is already 160,882 bytes (1672×941) with no metadata chunks. A lossless re-encode of its decoded pixels was larger (about 1.2 MB), so the original pixels and file are retained. A high-priority image preload starts the hero request before stylesheet discovery.
+
+Approved public development note: “Pre-alpha. The game is in active development. Play today and help shape what comes next.” Specific planned-feature labels remain on the gameplay cards.
