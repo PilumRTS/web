@@ -636,6 +636,7 @@ button:focus-visible, input:focus-visible {
 .download-dialog h2 { margin: 0 0 12px; text-align: left; font-size: 2.8rem; }
 #download-description { margin: 0 0 24px; font-size: 1rem; }
 .download-dialog fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.email-field + .email-field { margin-top: 20px; }
 .email-field label { display: block; margin-bottom: 8px; color: var(--cream); font-size: .9rem; }
 .email-field input {
   display: block; width: 100%; min-height: 48px;
