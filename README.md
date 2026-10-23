@@ -49,3 +49,10 @@ New download emails come from **Alex from Pilum**, use `download.pilumrts.com` f
 ## Backend deployment and recovery
 
 The GitHub Actions workflow `.github/workflows/deploy-worker.yml` checks the Worker, records a D1 recovery point, applies pending migrations and deploys changes on `main`. The `worker-production` environment is restricted to `main`; its dedicated Cloudflare credential is connected and the [first authenticated deployment passed](https://github.com/PilumRTS/web/actions/runs/39789139611). Operational access, private exports, code rollback and consent-safe database recovery are documented in [docs/cloudflare-operations.md](docs/cloudflare-operations.md). No new repository is required.
+
+
+### Development stage (23 October 2026)
+
+Public copy uses **Pre-alpha**. The downloadable combat build is playable; colony building and the economy are in development. Planned systems are identified on the gameplay cards. Download emails use the same stage. Historical installer versions retain their original release names.
+
+The hero WebP is already 160,882 bytes (1672×941) with no metadata chunks. A lossless re-encode of its decoded pixels was larger (about 1.2 MB), so the original pixels and file are retained. A high-priority image preload starts the hero request before stylesheet discovery.

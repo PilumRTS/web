@@ -32,6 +32,7 @@ const ogImage = new URL(`${base}icon-512.png`, Astro.site).href;
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary" />
 
+    <link rel="preload" href={`${base}hero-night.webp`} as="image" fetchpriority="high" />
     <link rel="preload" href={`${base}fonts/din-schablonierschrift/DIN_Schablonierschrift.woff`} as="font" type="font/woff" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
